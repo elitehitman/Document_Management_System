@@ -1,7 +1,11 @@
 import tkinter as tk
+import subprocess
 
 def role_selected(role):
-    print("Role selected:", role)
+    if role=='Student':
+        subprocess.run(['python','login.py'])
+    else:
+        print(role)
 
 def select_student():
     role_selected("Student")
