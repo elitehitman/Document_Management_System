@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Home = () => {
     const [userData, setUserData] = useState(null);
@@ -7,6 +8,7 @@ const Home = () => {
     const [showDocument, setShowDocument] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState(null);
     const [documentImage, setDocumentImage] = useState(null);
+    const navigate = useNavigate(); // Initialize navigate
 
     useEffect(() => {
         // Fetch user data when the component mounts
@@ -20,15 +22,18 @@ const Home = () => {
             console.log("Username from local storage:", username);
             const response = await axios.get('http://localhost:5000/userdata', {
                 params: {
-                    username: username
+                    username: username // Pass username to the backend
                 }
             });
             console.log("Response:", response.data);
             setUserData(response.data.userData);
         } catch (error) {
             console.error('Error:', error);
+            // Redirect to login page if not authenticated
+            navigate('/login'); // Use navigate to redirect
         }
     };
+
 
     const fetchDocuments = async () => {
         try {
@@ -62,7 +67,12 @@ const Home = () => {
         setShowDocument(false);
         setDocumentImage(null);
     };
-
+    const handleLogout = () => {
+        // Clear local storage and navigate to login page
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+        navigate('/login');
+    };
     return (
         <div>
             <h2>Success</h2>
@@ -77,6 +87,8 @@ const Home = () => {
                     {/* Display other user data attributes as needed */}
                 </div>
             )}
+            {/* Display logout button */}
+            <button onClick={handleLogout}>Logout</button>
 
             {/* Display "Document" button */}
             <div>

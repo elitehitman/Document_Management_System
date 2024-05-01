@@ -48,7 +48,7 @@ app.post('/login', async (req, res) => {
             res.status(401).json({ message: 'Invalid username or password' });
         } else {
             // Fetching reg_no from the user table result
-            const regNo = userResult[0].reg_no;
+            const regNo = result[0].reg_no;
             // Fetch user data from the student table based on the reg_no (student table)
             const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
             res.json({ message: 'Login successful!', userData: userData[0] }); // Send user data along with the response
@@ -60,24 +60,32 @@ app.post('/login', async (req, res) => {
 });
 
 // Add a new route to fetch user data
+// Add a new route to fetch user data
 app.get('/userdata', async (req, res) => {
     try {
         const { username } = req.query;
         console.log("Received username:", username); // Log received username
         const conn = await pool.getConnection();
-        // Fetch the reg_no from the user table based on the username
-        const userResult = await conn.query('SELECT * FROM user WHERE username = ?', [username]);
-        const regNo = userResult[0].reg_no; // Fetching reg_no from the user table result
-        // Fetch user data from the student table based on the reg_no
-        const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
+
+        // Fetch user data from both user and student tables
+        const userData = await conn.query(`
+            SELECT u.username, s.*
+            FROM user u
+            INNER JOIN student s ON u.user_id = s.reg_no
+            WHERE u.username = ?
+        `, [username]);
+
         console.log("Fetched userData:", userData); // Log fetched userData
         conn.release();
+
+        // Send the user data to the client
         res.json({ userData: userData[0] });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
 app.get('/alldocuments', async (req, res) => {
     try {
         const conn = await pool.getConnection();

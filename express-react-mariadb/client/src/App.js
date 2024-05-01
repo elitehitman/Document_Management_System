@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // No
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Home from './components/Home';
+import "./App.css"
 
 function App() {
   return (

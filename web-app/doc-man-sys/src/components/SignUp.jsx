@@ -25,23 +25,12 @@ const Signup = () => {
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Username</label>
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               value={formData.email}
               onChange={handleChange}
             />
