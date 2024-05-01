@@ -12,7 +12,9 @@ const Login = () => {
             // If login is successful, redirect to the success page
             if (response.data.message === 'Login successful!') {
                 // Redirect to the success page
-                window.location.href = '/success';
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+                window.location.href = '/home';
             } else {
                 // Handle other cases like invalid credentials
                 console.error('Invalid username or password');

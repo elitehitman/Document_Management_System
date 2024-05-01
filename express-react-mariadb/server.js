@@ -47,13 +47,32 @@ app.post('/login', async (req, res) => {
         if (result.length === 0 || result[0].password !== password) {
             res.status(401).json({ message: 'Invalid username or password' });
         } else {
-            res.json({ message: 'Login successful!' });
+            // Fetch user data from the student table based on the username (email_id)
+            const userData = await conn.query('SELECT * FROM student WHERE email_id = ?', [username]);
+            res.json({ message: 'Login successful!', userData: userData[0] }); // Send user data along with the response
         }
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+// Add a new route to fetch user data
+app.get('/userdata', async (req, res) => {
+    try {
+        const { username } = req.query;
+        console.log("Received username:", username); // Log received username
+        const conn = await pool.getConnection();
+        const userData = await conn.query('SELECT * FROM student WHERE email_id = ?', [username]);
+        console.log("Fetched userData:", userData); // Log fetched userData
+        conn.release();
+        res.json({ userData: userData[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
