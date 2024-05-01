@@ -119,7 +119,6 @@ app.get('/document/:regNo/:docId', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

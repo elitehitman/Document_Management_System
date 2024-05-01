@@ -5,16 +5,20 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // No
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Home from './components/Home';
+import Profile from './components/Profile';
+import Document from './components/Document';
 import "./App.css"
 
 function App() {
   return (
     <Router>
       <div>
-        <Routes> {/* Note the change from Switch to Routes */}
-          <Route path="/signup" element={<Signup />} /> {/* Note the change from component to element */}
-          <Route path="/login" element={<Login />} /> {/* Note the change from component to element */}
-          <Route path="/home" element={<Home />} /> {/* Note the change from component to element */}
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/documents" element={<Document />} />
         </Routes>
       </div>
     </Router>
