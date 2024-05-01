@@ -72,7 +72,39 @@ app.get('/userdata', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+app.get('/alldocuments', async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const documents = await conn.query('SELECT doc_id, doc_name FROM document');
+        conn.release();
+        res.json({ documents });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
+// Add a new route to fetch document image
+app.get('/document/:regNo/:docId', async (req, res) => {
+    try {
+        const { regNo, docId } = req.params;
+        const conn = await pool.getConnection();
+        const documentData = await conn.query('SELECT doc_img FROM document WHERE stud_reg_no = ? AND doc_id = ?', [regNo, docId]);
+        conn.release();
+        if (documentData.length === 0 || !documentData[0].doc_img) {
+            res.status(404).json({ message: 'Document not found' });
+        } else {
+            res.writeHead(200, {
+                'Content-Type': 'image/jpeg',
+                'Content-Length': documentData[0].doc_img.length
+            });
+            res.end(documentData[0].doc_img);
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
