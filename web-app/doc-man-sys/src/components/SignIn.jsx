@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import { GoogleLogin } from "react-google-login"; // Import GoogleLogin from react-google-login
 import "./Signin.css"; // Import the CSS file
+import { useNavigate } from "react-router-dom";
+
+// import GoogleCallback from "../GoogleCallback";
 
 const Signin = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  // console.log("Bruh");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,8 +29,16 @@ const Signin = () => {
   };
 
   const responseGoogle = (response) => {
-    console.log(response);
-    // Add logic to handle Google Sign-In response
+    if (response && response.profileObj) {
+      // Successful sign-in, handle the user data
+      console.log("Google sign-in successful:", response.profileObj);
+      // Redirect user to GoogleCallback page
+      navigate("/auth/google/callback");
+    } else {
+      // Sign-in failed or user canceled, handle the error
+      console.error("Google sign-in failed:", response);
+      // Add logic to handle failed sign-in (e.g., display error message)
+    }
   };
 
   return (
