@@ -47,8 +47,10 @@ app.post('/login', async (req, res) => {
         if (result.length === 0 || result[0].password !== password) {
             res.status(401).json({ message: 'Invalid username or password' });
         } else {
-            // Fetch user data from the student table based on the username (email_id)
-            const userData = await conn.query('SELECT * FROM student WHERE email_id = ?', [username]);
+            // Fetching reg_no from the user table result
+            const regNo = userResult[0].reg_no;
+            // Fetch user data from the student table based on the reg_no (student table)
+            const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
             res.json({ message: 'Login successful!', userData: userData[0] }); // Send user data along with the response
         }
     } catch (err) {
@@ -63,7 +65,11 @@ app.get('/userdata', async (req, res) => {
         const { username } = req.query;
         console.log("Received username:", username); // Log received username
         const conn = await pool.getConnection();
-        const userData = await conn.query('SELECT * FROM student WHERE email_id = ?', [username]);
+        // Fetch the reg_no from the user table based on the username
+        const userResult = await conn.query('SELECT * FROM user WHERE username = ?', [username]);
+        const regNo = userResult[0].reg_no; // Fetching reg_no from the user table result
+        // Fetch user data from the student table based on the reg_no
+        const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
         console.log("Fetched userData:", userData); // Log fetched userData
         conn.release();
         res.json({ userData: userData[0] });
