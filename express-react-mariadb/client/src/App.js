@@ -7,7 +7,9 @@ import Login from './components/Login';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import Document from './components/Document';
+import Staff from './components/Staff'
 import "./App.css"
+import StaffProfile from './components/StaffProfile';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/documents" element={<Document />} />
+          <Route path="/staff" element={<Staff />} />
+          <Route path="/staff/profile" element={<StaffProfile />} />
         </Routes>
       </div>
     </Router>

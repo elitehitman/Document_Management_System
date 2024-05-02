@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom'; // Import useHistory hook
 import '../App.css';
 
 const Signup = () => {
@@ -8,6 +8,7 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    // const history = useHistory(); // Initialize useHistory hook
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -15,12 +16,17 @@ const Signup = () => {
         }
     };
 
+    // Signup.js
+
     const handleSignup = async () => {
         try {
             if (password !== confirmPassword) {
                 setPasswordError('Passwords do not match');
                 return;
             }
+
+            console.log('Username:', username); // Add this line to log the username
+            console.log('Password:', password); // Add this line to log the password
 
             const response = await axios.post('http://localhost:5000/signup', { username, password });
             console.log(response.data);
@@ -37,6 +43,9 @@ const Signup = () => {
             // Handle error (e.g., display error message)
         }
     };
+
+
+
 
     return (
         <div className="bg-grey-lighter min-h-screen flex flex-col">

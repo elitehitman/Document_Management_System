@@ -12,21 +12,27 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:5000/login', { username, password });
             console.log(response.data);
-            // If login is successful, redirect to the success page
+
             if (response.data.message === 'Login successful!') {
-                // Redirect to the success page
-                localStorage.setItem('username', username);
-                localStorage.setItem('password', password);
-                window.location.href = '/home';
+                if (response.data.userType === 'user') {
+                    // Redirect regular users to the home page
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('password', password);
+                    window.location.href = '/home';
+                } else if (response.data.userType === 'staff') {
+                    // Redirect staff members to the staff page
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('password', password);
+                    window.location.href = '/staff';
+                }
             } else {
-                // Handle other cases like invalid credentials
                 console.error('Invalid username or password');
             }
         } catch (error) {
             console.error('Error:', error);
-            // Handle error (e.g., display error message)
         }
     };
+
 
     return (
         <div className="bg-grey-lighter min-h-screen flex flex-col">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Sidebar = () => {
+const StaffSidebar = () => {
     const navigate = useNavigate();
 
     const handleNavigate = (path) => {
@@ -19,9 +19,8 @@ const Sidebar = () => {
             <div>
                 <h1 className="text-xl font-bold">Menu</h1>
                 <ul className="mt-4">
-                    <li className="py-2"><button onClick={() => handleNavigate('/home')} className="hover:underline">Home</button></li>
-                    <li className="py-2"><button onClick={() => handleNavigate('/profile')} className="hover:underline">Profile</button></li>
-                    <li className="py-2"><button onClick={() => handleNavigate('/documents')} className="hover:underline">Documents</button></li>
+                    <li className="py-2"><button onClick={() => handleNavigate('/staff')} className="hover:underline">Home</button></li>
+                    <li className="py-2"><button onClick={() => handleNavigate('/staff/profile')} className="hover:underline">Profile</button></li>
                 </ul>
             </div>
             <button onClick={handleLogout} className="py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded">Logout</button>
@@ -29,4 +28,4 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar;
+export default StaffSidebar;

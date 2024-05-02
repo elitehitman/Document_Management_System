@@ -10,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Signup route
+// Signup route
 app.post('/signup', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -17,42 +18,68 @@ app.post('/signup', async (req, res) => {
 
         // Check if user exists
         const existingUser = await conn.query('SELECT * FROM user WHERE username = ?', [username]);
-        if (existingUser.length === 0) {
-            conn.release();
-            return res.status(400).json({ message: 'User does not exist' });
+        if (existingUser.length > 0) {
+            // Update password if it's currently NULL
+            if (existingUser[0].password === null) {
+                await conn.query('UPDATE user SET password = ? WHERE username = ?', [password, username]);
+                conn.release();
+                return res.json({ message: 'Password updated successfully!' });
+            } else {
+                conn.release();
+                return res.status(400).json({ message: 'User already has a password' });
+            }
         }
 
-        // Update password if it's currently NULL
-        if (existingUser[0].password === null) {
-            await conn.query('UPDATE user SET password = ? WHERE username = ?', [password, username]);
-            conn.release();
-            return res.json({ message: 'Password updated successfully!' });
-        } else {
-            conn.release();
-            return res.status(400).json({ message: 'User already has a password' });
+        // Check if staff member exists
+        const existingStaff = await conn.query('SELECT * FROM staff WHERE emp_email = ?', [username]);
+        if (existingStaff.length > 0) {
+            // Update password if it's currently NULL
+            if (existingStaff[0].passwords === null) {
+                await conn.query('UPDATE staff SET passwords = ? WHERE emp_email = ?', [password, username]);
+                conn.release();
+                return res.json({ message: 'Password updated successfully!' });
+            } else {
+                conn.release();
+                return res.status(400).json({ message: 'Staff member already has a password' });
+            }
         }
+
+        conn.release();
+        return res.status(400).json({ message: 'User does not exist' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
 
+
+// Login route
 // Login route
 app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const conn = await pool.getConnection();
-        const result = await conn.query('SELECT * FROM user WHERE username = ?', [username]);
-        conn.release();
-        if (result.length === 0 || result[0].password !== password) {
-            res.status(401).json({ message: 'Invalid username or password' });
-        } else {
+
+        // Check if the user is a regular user
+        let result = await conn.query('SELECT * FROM user WHERE username = ?', [username]);
+        if (result.length > 0 && result[0].password === password) {
             // Fetching reg_no from the user table result
             const regNo = result[0].reg_no;
             // Fetch user data from the student table based on the reg_no (student table)
             const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
-            res.json({ message: 'Login successful!', userData: userData[0] }); // Send user data along with the response
+            conn.release();
+            return res.json({ message: 'Login successful!', userType: 'user', userData: userData[0] });
         }
+
+        // Check if the user is a staff member
+        result = await conn.query('SELECT * FROM staff WHERE emp_email = ?', [username]);
+        if (result.length > 0 && result[0].passwords === password) {
+            conn.release();
+            return res.json({ message: 'Login successful!', userType: 'staff' });
+        }
+
+        conn.release();
+        res.status(401).json({ message: 'Invalid username or password' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -85,6 +112,27 @@ app.get('/userdata', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+// server.js
+
+// Add a new route to fetch staff data
+app.get('/staffdata', async (req, res) => {
+    try {
+        const { username } = req.query;
+        const conn = await pool.getConnection();
+
+        // Fetch staff data based on the username
+        const staffData = await conn.query('SELECT * FROM staff WHERE emp_email = ?', [username]);
+
+        conn.release();
+
+        // Send the staff data to the client
+        res.json({ staffData: staffData[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 app.get('/alldocuments', async (req, res) => {
     try {
