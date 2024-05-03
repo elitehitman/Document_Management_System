@@ -201,7 +201,7 @@ app.get('/alldocuments', async (req, res) => {
 });
 
 // Add a new route to fetch document image
-app.get('/document/:regNo/:docId', async (req, res) => {
+app.get('/document/:regNo/:docId',  async (req, res) => {
     try {
         const { regNo, docId } = req.params;
         const conn = await pool.getConnection();

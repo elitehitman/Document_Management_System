@@ -30,6 +30,12 @@ const Staff = () => {
         setFilteredStudents(filtered);
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch();
+        }
+    };
+
     return (
         <div className="flex h-screen">
             <StaffSidebar />
@@ -41,6 +47,7 @@ const Staff = () => {
                         className="w-full px-3 py-2 text-gray-200 bg-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        onKeyPress={handleKeyPress} // Call handleSearch when Enter key is pressed
                     />
                     <button
                         className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"

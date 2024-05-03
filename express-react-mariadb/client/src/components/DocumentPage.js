@@ -10,6 +10,7 @@ const DocumentPage = () => {
     const [documentImage, setDocumentImage] = useState(null);
 
     useEffect(() => {
+        
         fetchUserData();
         fetchDocuments();
     }, [regNo]); // Fetch data whenever regNo changes
