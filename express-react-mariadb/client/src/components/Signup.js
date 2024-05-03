@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom'; // Import useHistory hook
+import { Link} from 'react-router-dom'; // Import useHistory hook
 import '../App.css';
 
 const Signup = () => {

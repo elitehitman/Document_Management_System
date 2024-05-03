@@ -112,7 +112,61 @@ app.get('/userdata', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
-// server.js
+// Add console.log statements inside the /studentdata route handler
+// Add a new route to fetch student data
+// app.get('/studentdata', async (req, res) => {
+//     try {
+//         const { regNo } = req.query;
+//         console.log("Received regNo:", regNo); // Log received registration number
+//         const conn = await pool.getConnection();
+
+//         // Fetch user data from the student table based on reg_no
+//         const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
+
+//         console.log("Fetched userData:", userData); // Log fetched userData
+//         conn.release();
+
+//         // Send the user data to the client
+//         res.json({ userData: userData[0] });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// });
+
+// Add a new route to fetch all student names
+app.get('/studentnames', async (req, res) => {
+    try {
+        const conn = await pool.getConnection();
+        const students = await conn.query('SELECT * FROM student');
+        conn.release();
+        res.json({ students });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+// Add a new route to fetch student data
+app.get('/studentdata/:regNo', async (req, res) => {
+    try {
+        const { regNo } = req.params;
+        console.log("Received regNo:", regNo); // Log received registration number
+        const conn = await pool.getConnection();
+
+        // Fetch user data from the student table based on reg_no
+        const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
+
+        console.log("Fetched userData:", userData); // Log fetched userData
+        conn.release();
+
+        // Send the user data to the client
+        res.json({ userData: userData[0] });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
 
 // Add a new route to fetch staff data
 app.get('/staffdata', async (req, res) => {

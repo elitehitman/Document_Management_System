@@ -15,7 +15,7 @@ const StaffSidebar = () => {
     };
 
     return (
-        <div className="bg-gray-800 text-white w-48 p-4 flex flex-col justify-between">
+        <div className="fixed top-0 left-0 bg-gray-800 text-white w-48 p-4 flex flex-col justify-between h-full overflow-y-auto">
             <div>
                 <h1 className="text-xl font-bold">Menu</h1>
                 <ul className="mt-4">

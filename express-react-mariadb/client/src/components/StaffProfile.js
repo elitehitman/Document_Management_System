@@ -26,7 +26,7 @@ const StaffProfile = () => {
         <div className="flex h-screen">
             <StaffSidebar />
             {/* Main content */}
-            <div className="flex-1 p-8">
+            <div className="flex-1 p-8 pl-64"> {/* Add left padding equal to the width of the sidebar */}
                 <h2 className="text-2xl font-bold mb-4">Staff Details:</h2>
                 {staffData ? (
                     <div>
