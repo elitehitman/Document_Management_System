@@ -1,12 +1,18 @@
 // Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+
+    // Forcefully remove login values from local storage when component mounts
+    localStorage.removeItem('isUserLogin');
+    localStorage.removeItem('isStaffLogin');
+    localStorage.removeItem('isAdminLogin');
 
     const handleLogin = async () => {
         try {
@@ -14,16 +20,22 @@ const Login = () => {
             console.log(response.data);
 
             if (response.data.message === 'Login successful!') {
+                localStorage.setItem('userType', response.data.userType);
                 if (response.data.userType === 'user') {
-                    // Redirect regular users to the home page
                     localStorage.setItem('username', username);
-                    localStorage.setItem('password', password);
-                    window.location.href = '/home';
+                    localStorage.setItem('isUserLogin', true);
+                    console.log('User logged in');
+                    navigate('/home');
                 } else if (response.data.userType === 'staff') {
-                    // Redirect staff members to the staff page
                     localStorage.setItem('username', username);
-                    localStorage.setItem('password', password);
-                    window.location.href = '/staff';
+                    localStorage.setItem('isStaffLogin', true);
+                    console.log('Staff logged in');
+                    navigate('/staff');
+                } else if (response.data.userType === 'admin') {
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('isAdminLogin', true);
+                    console.log('Admin logged in');
+                    navigate('/admin');
                 }
             } else {
                 console.error('Invalid username or password');
@@ -32,7 +44,6 @@ const Login = () => {
             console.error('Error:', error);
         }
     };
-
 
     return (
         <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -56,7 +67,7 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
-                        className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1" // Update button styles
+                        className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1"
                         onClick={handleLogin}
                     >
                         Login

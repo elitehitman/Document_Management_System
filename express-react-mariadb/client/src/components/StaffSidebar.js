@@ -11,6 +11,9 @@ const StaffSidebar = () => {
     const handleLogout = () => {
         localStorage.removeItem('username');
         localStorage.removeItem('password');
+        localStorage.removeItem('isUserLogin');
+        localStorage.removeItem('isStaffLogin');
+        localStorage.removeItem('isAdminLogin');
         navigate('/login');
     };
 

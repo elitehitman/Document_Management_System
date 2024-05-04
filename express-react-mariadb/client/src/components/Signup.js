@@ -1,6 +1,7 @@
+// Signup.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link} from 'react-router-dom'; // Import useHistory hook
+import { Link } from 'react-router-dom';
 import '../App.css';
 
 const Signup = () => {
@@ -8,15 +9,17 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    // const history = useHistory(); // Initialize useHistory hook
+
+    // Forcefully remove login values from local storage when component mounts
+    localStorage.removeItem('isUserLogin');
+    localStorage.removeItem('isStaffLogin');
+    localStorage.removeItem('isAdminLogin');
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             handleSignup();
         }
     };
-
-    // Signup.js
 
     const handleSignup = async () => {
         try {
@@ -25,27 +28,18 @@ const Signup = () => {
                 return;
             }
 
-            console.log('Username:', username); // Add this line to log the username
-            console.log('Password:', password); // Add this line to log the password
-
             const response = await axios.post('http://localhost:5000/signup', { username, password });
             console.log(response.data);
-            // If signup is successful, redirect to the login page
+
             if (response.data.message === 'Password updated successfully!') {
-                // Redirect to the login page
                 window.location.href = '/login';
             } else {
-                // Handle other cases like invalid credentials
                 console.error('Error:', response.data.message);
             }
         } catch (error) {
             console.error('Error:', error);
-            // Handle error (e.g., display error message)
         }
     };
-
-
-
 
     return (
         <div className="bg-grey-lighter min-h-screen flex flex-col">
@@ -78,13 +72,13 @@ const Signup = () => {
                             setConfirmPassword(e.target.value);
                             setPasswordError('');
                         }}
-                        onKeyDown={handleKeyPress} // Add this line
+                        onKeyDown={handleKeyPress}
                     />
                     {passwordError && <p className="text-red-500">{passwordError}</p>}
 
                     <button
                         type="submit"
-                        className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1" // Update button styles
+                        className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1"
                         onClick={handleSignup}
                     >
                         Create Account

@@ -1,15 +1,14 @@
-// server.js
-
+// Import necessary modules
 const express = require('express');
 const cors = require('cors');
 const pool = require('./db'); // Import the database connection
 const app = express();
 const port = 5000;
 
+// Configure middleware
 app.use(cors());
 app.use(express.json());
 
-// Signup route
 // Signup route
 app.post('/signup', async (req, res) => {
     try {
@@ -52,13 +51,16 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-
-// Login route
 // Login route
 app.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const conn = await pool.getConnection();
+
+        // Initialize variables to track login status
+        let isUserLogin = false;
+        let isStaffLogin = false;
+        let isAdminLogin = false;
 
         // Check if the user is a regular user
         let result = await conn.query('SELECT * FROM user WHERE username = ?', [username]);
@@ -68,14 +70,22 @@ app.post('/login', async (req, res) => {
             // Fetch user data from the student table based on the reg_no (student table)
             const userData = await conn.query('SELECT * FROM student WHERE reg_no = ?', [regNo]);
             conn.release();
-            return res.json({ message: 'Login successful!', userType: 'user', userData: userData[0] });
+            return res.json({ message: 'Login successful!', userType: 'user', userData: userData[0], isUserLogin, isStaffLogin, isAdminLogin });
         }
 
         // Check if the user is a staff member
         result = await conn.query('SELECT * FROM staff WHERE emp_email = ?', [username]);
         if (result.length > 0 && result[0].passwords === password) {
             conn.release();
-            return res.json({ message: 'Login successful!', userType: 'staff' });
+            isStaffLogin = true;
+            return res.json({ message: 'Login successful!', userType: 'staff', isUserLogin, isStaffLogin, isAdminLogin });
+        }
+
+        // Check if the user is an admin
+        result = await conn.query('SELECT * FROM admin WHERE username = ? AND password = ?', [username, password]);
+        if (result.length > 0) {
+            conn.release();
+            return res.json({ message: 'Login successful!', userType: 'admin', isUserLogin, isStaffLogin, isAdminLogin });
         }
 
         conn.release();
@@ -86,7 +96,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Add a new route to fetch user data
+
 // Add a new route to fetch user data
 app.get('/userdata', async (req, res) => {
     try {
@@ -201,7 +211,7 @@ app.get('/alldocuments', async (req, res) => {
 });
 
 // Add a new route to fetch document image
-app.get('/document/:regNo/:docId',  async (req, res) => {
+app.get('/document/:regNo/:docId', async (req, res) => {
     try {
         const { regNo, docId } = req.params;
         const conn = await pool.getConnection();
@@ -221,6 +231,46 @@ app.get('/document/:regNo/:docId',  async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+// Add a new route to handle adding a new student
+app.post('/add-student', async (req, res) => {
+    try {
+        // Extract data from the request body
+        const { regNo, aadharNo, name, email, mobileNo, course, branch, studyYear, gender, category, caste, birthDate, age } = req.body;
+
+        // Add your validation checks here if necessary
+
+        // Execute SQL query to insert the new student into the database
+        const conn = await pool.getConnection();
+        await conn.query('INSERT INTO student (reg_no, aadhar_no, name, email_id, mobile_no, course, branch, study_year, gender, category, caste, birth_date, age) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [regNo, aadharNo, name, email, mobileNo, course, branch, studyYear, gender, category, caste, birthDate, age]);
+        conn.release();
+
+        // Send a success response to the client
+        res.json({ message: 'Student added successfully!' });
+    } catch (error) {
+        // Handle errors
+        console.error('Error adding student:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+app.delete('/remove-student/:regNo', async (req, res) => {
+    try {
+        const { regNo } = req.params;
+        const conn = await pool.getConnection();
+
+        // Execute SQL query to delete the student from the database
+        await conn.query('DELETE FROM student WHERE reg_no = ?', [regNo]);
+        conn.release();
+
+        // Send a success response to the client
+        res.json({ message: 'Student removed successfully!' });
+    } catch (error) {
+        // Handle errors
+        console.error('Error removing student:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

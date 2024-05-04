@@ -1,34 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import StaffSidebar from './StaffSidebar';
 
 const Staff = () => {
     const [students, setStudents] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredStudents, setFilteredStudents] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchStudents = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/studentnames');
-                setStudents(response.data.students);
-                setFilteredStudents(response.data.students); // Initialize filtered students with all students
-            } catch (error) {
-                console.error('Error fetching students:', error);
-            }
-        };
+        const isUserLogin = localStorage.getItem('isUserLogin') === 'true';
+        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
+        const isAdminLogin = localStorage.getItem('isAdminLogin') === 'true';
 
-        fetchStudents();
+        console.log("isUserLogin:", isUserLogin);
+        console.log("isStaffLogin:", isStaffLogin);
+        console.log("isAdminLogin:", isAdminLogin);
+
+        if (!isStaffLogin) {
+            console.log("Redirecting to login page...");
+            navigate('/login');
+        } else {
+            console.log("Fetching students...");
+            fetchStudents();
+        }
     }, []);
 
+
+    const fetchStudents = async () => {
+        try {
+            console.log("Fetching students data...");
+            const response = await axios.get('http://localhost:5000/studentnames');
+            console.log("Students data:", response.data.students);
+            setStudents(response.data.students);
+            setFilteredStudents(response.data.students);
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
+    };
+
+
     const handleSearch = () => {
+        console.log("Searching for:", searchTerm);
         const filtered = students.filter(student => {
             return student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 student.reg_no.toLowerCase().includes(searchTerm.toLowerCase());
         });
+        console.log("Filtered students:", filtered);
         setFilteredStudents(filtered);
     };
+
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
@@ -47,7 +69,7 @@ const Staff = () => {
                         className="w-full px-3 py-2 text-gray-200 bg-gray-700 rounded-md focus:outline-none focus:ring focus:border-blue-300"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        onKeyPress={handleKeyPress} // Call handleSearch when Enter key is pressed
+                        onKeyPress={handleKeyPress}
                     />
                     <button
                         className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
@@ -69,7 +91,6 @@ const Staff = () => {
                                         <p>Branch: {student.branch}</p>
                                         <p>Registration Number: {student.reg_no}</p>
                                     </div>
-                                    {/* Add View Documents button */}
                                     <Link to={`/documents/${student.reg_no}`} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                                         View Documents
                                     </Link>

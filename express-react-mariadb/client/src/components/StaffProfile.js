@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import StaffSidebar from './StaffSidebar';
+import { useNavigate } from 'react-router-dom';
+
 const StaffProfile = () => {
     const [staffData, setStaffData] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch staff data from the server when the component mounts
-        const fetchStaffData = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/staffdata', {
-                    params: {
-                        username: localStorage.getItem('username') // Pass the logged-in username as a parameter
-                    }
-                });
-                setStaffData(response.data.staffData);
-            } catch (error) {
-                console.error('Error fetching staff data:', error);
-            }
-        };
+        const isUserLogin = localStorage.getItem('isUserLogin') === 'true';
+        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
+        const isAdminLogin = localStorage.getItem('isAdminLogin') === 'true';
 
-        fetchStaffData();
+        if (!isStaffLogin) {
+            navigate('/login');
+        } else {
+            fetchStaffData();
+        }
     }, []);
+    // Fetch staff data from the server when the component mounts
+    const fetchStaffData = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/staffdata', {
+                params: {
+                    username: localStorage.getItem('username') // Pass the logged-in username as a parameter
+                }
+            });
+            setStaffData(response.data.staffData);
+        } catch (error) {
+            console.error('Error fetching staff data:', error);
+        }
+    };
 
     return (
         <div className="flex h-screen">

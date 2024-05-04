@@ -9,10 +9,15 @@ const Sidebar = () => {
     };
 
     const handleLogout = () => {
+        console.log("Logging out...");
         localStorage.removeItem('username');
-        localStorage.removeItem('password');
+        localStorage.removeItem('password'); // Assuming you store password for some reason
+        localStorage.removeItem('isUserLogin');
+        localStorage.removeItem('isStaffLogin');
+        localStorage.removeItem('isAdminLogin');
         navigate('/login');
     };
+
 
     return (
         <div className="bg-gray-800 text-white w-48 p-4 flex flex-col justify-between">

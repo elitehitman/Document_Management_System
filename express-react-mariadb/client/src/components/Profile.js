@@ -2,12 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const [userData, setUserData] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchUserData();
+        const isUserLogin = localStorage.getItem('isUserLogin') === 'true';
+        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
+        const isAdminLogin = localStorage.getItem('isAdminLogin') === 'true';
+
+        if (!isUserLogin) {
+            navigate('/login');
+        } else {
+            fetchUserData();
+        }
     }, []);
 
     const fetchUserData = async () => {

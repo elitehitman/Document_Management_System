@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from './Sidebar';
+import { useNavigate } from 'react-router-dom';
 
 const Document = () => {
     const [documents, setDocuments] = useState([]);
     const [userData, setUserData] = useState(null);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        fetchUserData();
-        fetchDocuments();
+        const isUserLogin = localStorage.getItem('isUserLogin') === 'true';
+        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
+        const isAdminLogin = localStorage.getItem('isAdminLogin') === 'true';
+
+        if (!isUserLogin) {
+            navigate('/login');
+        } else {
+            fetchUserData();
+            fetchDocuments();
+        }
     }, []);
 
     const fetchUserData = async () => {

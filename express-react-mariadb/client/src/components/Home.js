@@ -1,16 +1,24 @@
-// Home.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Sidebar from './Sidebar';
 
 const Home = () => {
     const [userData, setUserData] = useState(null);
     const [documentImage, setDocumentImage] = useState(null);
+    const navigate = useNavigate(); // Initialize useNavigate
 
     useEffect(() => {
-        fetchUserData();
-    }, []);
+        const isUserLogin = localStorage.getItem('isUserLogin') === 'true';
+        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
+        const isAdminLogin = localStorage.getItem('isAdminLogin') === 'true';
 
+        if (!isUserLogin) {
+            navigate('/login');
+        } else {
+            fetchUserData();
+        }
+    }, []);
     const fetchUserData = async () => {
         try {
             const username = localStorage.getItem('username');
@@ -27,6 +35,7 @@ const Home = () => {
         } catch (error) {
             console.error(error);
             // Handle error or navigate to login page
+            navigate('/login'); // Navigate to login page
         }
     };
 
