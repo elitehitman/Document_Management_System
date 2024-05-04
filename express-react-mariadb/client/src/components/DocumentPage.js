@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const DocumentPage = () => {
     const { regNo: initialRegNo } = useParams(); // Extract regNo from URL params
@@ -8,17 +9,30 @@ const DocumentPage = () => {
     const [userData, setUserData] = useState(null);
     const [documents, setDocuments] = useState([]);
     const [documentImage, setDocumentImage] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        
-        fetchUserData();
-        fetchDocuments();
-    }, [regNo]); // Fetch data whenever regNo changes
+
+        // Set height of html and body to 100% and hide overflow to prevent scrolling
+        document.documentElement.style.height = '100%';
+        document.body.style.height = '100%';
+        document.documentElement.style.overflow = 'hidden';
+
+        // Check if staff is logged in
+        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
+        if (!isStaffLogin) {
+            // Redirect to login page if staff is not logged in
+            navigate('/login');
+        } else {
+            // Fetch user data and documents if staff is logged in
+            fetchUserData();
+            fetchDocuments();
+        }
+    }, [navigate]);
 
     const fetchUserData = async () => {
         try {
             const response = await axios.get(`http://localhost:5000/studentdata/${regNo}`);
-            console.log("Fetched user data:", response.data.userData); // Log fetched user data
             setUserData(response.data.userData);
 
             // Fetch document image for doc_id = d11
@@ -57,41 +71,34 @@ const DocumentPage = () => {
 
     return (
         <div className="flex h-screen">
-            {/* Sidebar */}
-            <div className="w-1/4 bg-gray-200 p-4">
-                {/* Display the document image */}
-                {documentImage && (
-                    <div className="flex justify-center mb-4"> {/* Center the image horizontally */}
-                        <img
-                            src={documentImage}
-                            alt="Document"
-                            style={{ width: '50%', height: 'auto',border:'2px solid black' }} // Apply styling to reduce size by 50%
-                        />
-                    </div>
-                )}
+            {documentImage && (
+                <div className="w-1/4 bg-gray-200 p-4">
+                    <img
+                        src={documentImage}
+                        alt="Document"
+                        style={{ width: '50%', height: 'auto', border: '2px solid black' }}
+                    />
+                    {userData && (
+                        <div>
+                            <h2 className="text-xl font-bold">Student Details:</h2>
+                            <p><strong>Name:</strong> {userData.name}</p>
+                            <p><strong>Registration Number:</strong> {userData.reg_no}</p>
+                            <p><strong>Aadhar Number:</strong> {userData.aadhar_no}</p>
+                            <p><strong>Email:</strong> {userData.email_id}</p>
+                            <p><strong>Mobile Number:</strong> {userData.mobile_no}</p>
+                            <p><strong>Course:</strong> {userData.course}</p>
+                            <p><strong>Branch:</strong> {userData.branch}</p>
+                            <p><strong>Study Year:</strong> {userData.study_year}</p>
+                            <p><strong>Gender:</strong> {userData.gender}</p>
+                            <p><strong>Category:</strong> {userData.category}</p>
+                            <p><strong>Caste:</strong> {userData.caste}</p>
+                            <p><strong>Birth Date:</strong> {userData.birth_date}</p>
+                            <p><strong>Age:</strong> {userData.age}</p>
+                        </div>
+                    )}
+                </div>
+            )}
 
-                {/* Display student details */}
-                {userData && (
-                    <div>
-                        <h2 className="text-xl font-bold">Student Details:</h2>
-                        <p><strong>Name:</strong> {userData.name}</p>
-                        <p><strong>Registration Number:</strong> {userData.reg_no}</p>
-                        <p><strong>Aadhar Number:</strong> {userData.aadhar_no}</p>
-                        <p><strong>Email:</strong> {userData.email_id}</p>
-                        <p><strong>Mobile Number:</strong> {userData.mobile_no}</p>
-                        <p><strong>Course:</strong> {userData.course}</p>
-                        <p><strong>Branch:</strong> {userData.branch}</p>
-                        <p><strong>Study Year:</strong> {userData.study_year}</p>
-                        <p><strong>Gender:</strong> {userData.gender}</p>
-                        <p><strong>Category:</strong> {userData.category}</p>
-                        <p><strong>Caste:</strong> {userData.caste}</p>
-                        <p><strong>Birth Date:</strong> {userData.birth_date}</p>
-                        <p><strong>Age:</strong> {userData.age}</p>
-                    </div>
-                )}
-            </div>
-
-            {/* Main Content */}
             <div className="flex-1 p-8 flex flex-wrap justify-center">
                 {documents.map((document, index) => (
                     <div

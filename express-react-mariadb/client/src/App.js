@@ -10,6 +10,7 @@ import StaffProfile from './components/StaffProfile';
 import DocumentPage from './components/DocumentPage';
 import Admin from './components/Admin';
 import AddStudent from './components/AddStudent';
+import LandingPage from './components/Landing';
 import './App.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
     <Router>
       <div>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login setIsUserLogin={setIsUserLogin} />} />
           <Route path="/home" element={<Home isUserLogin={isUserLogin} />} />
