@@ -11,6 +11,7 @@ import DocumentPage from './components/DocumentPage';
 import Admin from './components/Admin';
 import AddStudent from './components/AddStudent';
 import LandingPage from './components/Landing';
+import NotFound from './components/NotFound';
 import './App.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/documents/:regNo" element={<DocumentPage />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/add-student" element={<AddStudent />} />
+          <Route path="/*" element={<NotFound />} />
         </Routes>
       </div>
     </Router>

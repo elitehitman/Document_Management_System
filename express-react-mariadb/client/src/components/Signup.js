@@ -1,4 +1,3 @@
-// Signup.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -9,6 +8,7 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [signupError, setSignupError] = useState('');
 
     // Forcefully remove login values from local storage when component mounts
     localStorage.removeItem('isUserLogin');
@@ -35,9 +35,11 @@ const Signup = () => {
                 window.location.href = '/login';
             } else {
                 console.error('Error:', response.data.message);
+                setSignupError(response.data.message); // Set signup error message
             }
         } catch (error) {
             console.error('Error:', error);
+            setSignupError('User does not exist'); // Set signup error message for internal server errors
         }
     };
 
@@ -71,10 +73,12 @@ const Signup = () => {
                         onChange={(e) => {
                             setConfirmPassword(e.target.value);
                             setPasswordError('');
+                            setSignupError(''); // Clear signup error when typing in confirm password field
                         }}
                         onKeyDown={handleKeyPress}
                     />
                     {passwordError && <p className="text-red-500">{passwordError}</p>}
+                    {signupError && <p className="text-red-500">{signupError}</p>}
 
                     <button
                         type="submit"

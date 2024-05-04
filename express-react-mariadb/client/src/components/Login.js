@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,6 +7,7 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [loginError, setLoginError] = useState('');
 
     // Forcefully remove login values from local storage when component mounts
     localStorage.removeItem('isUserLogin');
@@ -42,6 +42,7 @@ const Login = () => {
             }
         } catch (error) {
             console.error('Error:', error);
+            setLoginError('Invalid username or password.');
         }
     };
 
@@ -66,6 +67,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    {loginError && <p className="text-red-500 mb-4">{loginError}</p>}
                     <button
                         className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1"
                         onClick={handleLogin}
