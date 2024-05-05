@@ -28,12 +28,18 @@ const Home = () => {
                     username: username
                 }
             });
+
+            console.log("Response from /userdata endpoint:", response.data); // Log the response data
+
             setUserData(response.data.userData);
 
             // Fetch document image for doc_id = d11 if it exists
-            if (response.data.userData.doc_img) {
+            try {
                 const docResponse = await axios.get('http://localhost:5000/document/' + response.data.userData.reg_no + '/d11', { responseType: 'blob' });
                 setDocumentImage(URL.createObjectURL(docResponse.data));
+            } catch (docError) {
+                console.error("Error fetching document image:", docError);
+                // If document image fetch fails, do nothing or handle as required
             }
         } catch (error) {
             console.error(error);
@@ -41,6 +47,8 @@ const Home = () => {
             navigate('/login'); // Navigate to login page
         }
     };
+
+
 
     return (
         <div className="flex h-screen">
