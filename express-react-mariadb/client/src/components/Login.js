@@ -38,7 +38,7 @@ const Login = () => {
                     navigate('/admin');
                 }
             } else {
-                console.error('Invalid username or password');
+                setLoginError(response.data.message); // Set login error message
             }
         } catch (error) {
             console.error('Error:', error);

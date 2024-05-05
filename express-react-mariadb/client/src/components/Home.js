@@ -19,6 +19,7 @@ const Home = () => {
             fetchUserData();
         }
     }, []);
+
     const fetchUserData = async () => {
         try {
             const username = localStorage.getItem('username');
@@ -29,9 +30,11 @@ const Home = () => {
             });
             setUserData(response.data.userData);
 
-            // Fetch document image for doc_id = d11
-            const docResponse = await axios.get('http://localhost:5000/document/' + response.data.userData.reg_no + '/d11', { responseType: 'blob' });
-            setDocumentImage(URL.createObjectURL(docResponse.data));
+            // Fetch document image for doc_id = d11 if it exists
+            if (response.data.userData.doc_img) {
+                const docResponse = await axios.get('http://localhost:5000/document/' + response.data.userData.reg_no + '/d11', { responseType: 'blob' });
+                setDocumentImage(URL.createObjectURL(docResponse.data));
+            }
         } catch (error) {
             console.error(error);
             // Handle error or navigate to login page
@@ -44,7 +47,7 @@ const Home = () => {
             <Sidebar />
             {/* Main content */}
             <div className="flex-1 p-8 relative">
-                {/* Display document image on top right */}
+                {/* Display document image on top right if it exists */}
                 <div className="absolute top-0 right-0 w-1/4 p-4 border border-gray-400 rounded bg-blue-200">
                     {documentImage && <img src={documentImage} alt="Document" className="w-full h-auto" />}
                 </div>

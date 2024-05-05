@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signup from './components/Signup';
 import Login from './components/Login';
@@ -15,7 +15,6 @@ import NotFound from './components/NotFound';
 import './App.css';
 
 function App() {
-  const [isUserLogin, setIsUserLogin] = useState(false);
 
   return (
     <Router>
@@ -23,10 +22,10 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login setIsUserLogin={setIsUserLogin} />} />
-          <Route path="/home" element={<Home isUserLogin={isUserLogin} />} />
-          <Route path="/profile" element={<Profile isUserLogin={isUserLogin} />} />
-          <Route path="/documents" element={<Document isUserLogin={isUserLogin} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/documents" element={<Document />} />
           <Route path="/staff" element={<Staff />} />
           <Route path="/staff/profile" element={<StaffProfile />} />
           <Route path="/documents/:regNo" element={<DocumentPage />} />
