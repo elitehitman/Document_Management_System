@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import '../App.css';
 
 const Signup = () => {
     const [username, setUsername] = useState('');
@@ -9,11 +8,12 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [signupError, setSignupError] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
 
-    // Forcefully remove login values from local storage when component mounts
-    localStorage.removeItem('isUserLogin');
-    localStorage.removeItem('isStaffLogin');
-    localStorage.removeItem('isAdminLogin');
+    useEffect(() => {
+        setIsVisible(true);
+        return () => setIsVisible(false);
+    }, []);
 
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -44,64 +44,61 @@ const Signup = () => {
     };
 
     return (
-        <div className="bg-grey-lighter min-h-screen flex flex-col">
-            <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-                <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-                    <h1 className="mb-8 text-3xl text-center">Sign up</h1>
-                    <input
-                        type="text"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="username"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="confirm_password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => {
-                            setConfirmPassword(e.target.value);
-                            setPasswordError('');
-                            setSignupError(''); // Clear signup error when typing in confirm password field
-                        }}
-                        onKeyDown={handleKeyPress}
-                    />
-                    {passwordError && <p className="text-red-500">{passwordError}</p>}
-                    {signupError && <p className="text-red-500">{signupError}</p>}
+        <div className={`bg-gradient-to-r from-pink-500 to-purple-500 min-h-screen flex justify-center items-center transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="bg-white rounded-lg shadow-lg p-8 w-96">
+                <h1 className="text-3xl text-center mb-8 text-gray-800">Sign up</h1>
+                <input
+                    type="text"
+                    className="block border border-gray-300 rounded w-full py-3 px-4 mb-4 leading-tight focus:outline-none focus:border-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
+                    name="username"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
+                    className="block border border-gray-300 rounded w-full py-3 px-4 mb-4 leading-tight focus:outline-none focus:border-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
+                    name="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <input
+                    type="password"
+                    className="block border border-gray-300 rounded w-full py-3 px-4 mb-6 leading-tight focus:outline-none focus:border-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
+                    name="confirm_password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setPasswordError('');
+                        setSignupError('');
+                    }}
+                    onKeyDown={handleKeyPress}
+                />
+                {passwordError && <p className="text-red-500 mb-4">{passwordError}</p>}
+                {signupError && <p className="text-red-500 mb-4">{signupError}</p>}
 
-                    <button
-                        type="submit"
-                        className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1"
-                        onClick={handleSignup}
-                    >
-                        Create Account
-                    </button>
+                <button
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4 transition duration-300 ease-in-out transform hover:scale-105"
+                    onClick={handleSignup}
+                >
+                    Create Account
+                </button>
 
-                    <div className="text-center text-sm text-grey-dark mt-4">
-                        By signing up, you agree to the
-                        <a className="no-underline border-b border-grey-dark text-grey-dark" href="#">
-                            Terms of Service
-                        </a> and
-                        <a className="no-underline border-b border-grey-dark text-grey-dark" href="#">
-                            Privacy Policy
-                        </a>
-                    </div>
+                <div className="text-center text-gray-700 mb-4">
+                    By signing up, you agree to the
+                    <a className="ml-1 no-underline border-b border-gray-700 text-gray-700" href="#">
+                        Terms of Service
+                    </a> and
+                    <a className="ml-1 no-underline border-b border-gray-700 text-gray-700" href="#">
+                        Privacy Policy
+                    </a>
                 </div>
 
-                <div className="text-grey-dark mt-6">
+                <div className="text-gray-700 text-center">
                     Already have an account?
-                    <Link className="no-underline border-b border-blue text-blue" to="/login">
+                    <Link className="ml-1 no-underline border-b border-blue-500 text-blue-500" to="/login">
                         Log in
                     </Link>.
                 </div>

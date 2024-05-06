@@ -48,36 +48,31 @@ const Home = () => {
         }
     };
 
-
-
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen bg-gray-100">
             <Sidebar />
-            {/* Main content */}
             <div className="flex-1 p-8 relative">
-                {/* Display document image on top right if it exists */}
-                <div className="absolute top-0 right-0 w-1/4 p-4 border border-gray-400 rounded bg-blue-200">
-                    {documentImage && <img src={documentImage} alt="Document" className="w-full h-auto" />}
+                <div className="absolute top-1/2 transform -translate-y-1/2 right-16 w-1/4 p-4 border border-gray-400 rounded bg-gray-300 shadow-lg">
+                    {documentImage && <img src={documentImage} alt="Document" className="w-full h-auto rounded-lg" style={{ backgroundColor: '#E5E7EB' }} />}
                 </div>
-                {/* Display user data */}
-                <div className="w-3/4">
-                    <h2 className="text-2xl font-bold mb-4">Your Details:</h2>
+                <div className="w-2/3">
+                    <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Details</h2>
                     {userData && (
                         <div>
-                            <div className="detail-box border border-gray-400 rounded-lg bg-gray-200 p-4 mb-4">
-                                <p className="detail"><strong>Name:</strong> {userData.name}</p>
+                            <div className="detail-box border border-gray-400 rounded-lg bg-white p-6 mb-6 shadow-md hover:shadow-lg transition duration-300">
+                                <p className="detail text-gray-800 text-lg"><strong>Name:</strong> {userData.name}</p>
                             </div>
-                            <div className="detail-box border border-gray-400 rounded-lg bg-gray-200 p-4 mb-4">
-                                <p className="detail"><strong>Registration Number:</strong> {userData.reg_no}</p>
+                            <div className="detail-box border border-gray-400 rounded-lg bg-white p-6 mb-6 shadow-md hover:shadow-lg transition duration-300">
+                                <p className="detail text-gray-800 text-lg"><strong>Registration Number:</strong> {userData.reg_no}</p>
                             </div>
-                            <div className="detail-box border border-gray-400 rounded-lg bg-gray-200 p-4 mb-4">
-                                <p className="detail"><strong>Course:</strong> {userData.course}</p>
+                            <div className="detail-box border border-gray-400 rounded-lg bg-white p-6 mb-6 shadow-md hover:shadow-lg transition duration-300">
+                                <p className="detail text-gray-800 text-lg"><strong>Course:</strong> {userData.course}</p>
                             </div>
-                            <div className="detail-box border border-gray-400 rounded-lg bg-gray-200 p-4 mb-4">
-                                <p className="detail"><strong>Branch:</strong> {userData.branch}</p>
+                            <div className="detail-box border border-gray-400 rounded-lg bg-white p-6 mb-6 shadow-md hover:shadow-lg transition duration-300">
+                                <p className="detail text-gray-800 text-lg"><strong>Branch:</strong> {userData.branch}</p>
                             </div>
-                            <div className="detail-box border border-gray-400 rounded-lg bg-gray-200 p-4 mb-4">
-                                <p className="detail"><strong>Study Year:</strong> {userData.study_year}</p>
+                            <div className="detail-box border border-gray-400 rounded-lg bg-white p-6 mb-6 shadow-md hover:shadow-lg transition duration-300">
+                                <p className="detail text-gray-800 text-lg"><strong>Study Year:</strong> {userData.study_year}</p>
                             </div>
                         </div>
                     )}

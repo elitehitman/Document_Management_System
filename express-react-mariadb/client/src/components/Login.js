@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import '../App.css';
@@ -8,6 +8,12 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState('');
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        setIsVisible(true);
+        return () => setIsVisible(false);
+    }, []);
 
     // Forcefully remove login values from local storage when component mounts
     localStorage.removeItem('isUserLogin');
@@ -47,39 +53,39 @@ const Login = () => {
     };
 
     return (
-        <div className="bg-grey-lighter min-h-screen flex flex-col">
-            <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-                <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-                    <h1 className="mb-8 text-3xl text-center">Login</h1>
-                    <input
-                        type="text"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="username"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        className="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    {loginError && <p className="text-red-500 mb-4">{loginError}</p>}
-                    <button
-                        className="w-full text-center py-3 rounded border border-black bg-blue-500 text-white hover:bg-blue-700 focus:outline-none my-1"
-                        onClick={handleLogin}
-                    >
-                        Login
-                    </button>
-                    <div className="text-center text-sm text-grey-dark mt-4">
-                        New user?
-                        <Link className="no-underline border-b border-blue text-blue" to="/signup">
-                            Sign up here
-                        </Link>.
-                    </div>
+        <div className={`bg-gradient-to-r from-purple-500 to-pink-500 min-h-screen flex justify-center items-center transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="bg-white rounded-lg shadow-lg p-8 w-96">
+                <h1 className="text-3xl text-center mb-6 text-gray-800">Login</h1>
+                <input
+                    type="text"
+                    className="block border border-gray-300 rounded w-full py-3 px-4 mb-4 leading-tight focus:outline-none focus:border-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
+                    name="username"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                    type="password"
+                    className="block border border-gray-300 rounded w-full py-3 px-4 mb-6 leading-tight focus:outline-none focus:border-purple-500 transition duration-300 ease-in-out transform hover:scale-105"
+                    name="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                {loginError && (
+                    <p className="text-red-500 mb-4 transition duration-300 ease-in-out transform hover:scale-105">{loginError}</p>
+                )}
+                <button
+                    className="bg-pink-500 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300 ease-in-out transform hover:scale-105"
+                    onClick={handleLogin}
+                >
+                    Login
+                </button>
+                <div className="text-center text-gray-700 mt-4">
+                    New user?
+                    <Link className="ml-2 text-purple-500 hover:text-purple-700 transition duration-300 ease-in-out transform hover:scale-105" to="/signup">
+                        Sign up here
+                    </Link>.
                 </div>
             </div>
         </div>
