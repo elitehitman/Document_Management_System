@@ -2,6 +2,9 @@
 const express = require('express');
 const cors = require('cors');
 const pool = require('./db'); // Import the database connection
+const multer = require('multer');
+const fs = require('fs');
+const upload = multer();
 const app = express();
 const port = 5000;
 
@@ -266,6 +269,28 @@ app.delete('/remove-student/:regNo', async (req, res) => {
     } catch (error) {
         // Handle errors
         console.error('Error removing student:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+// Add a new route to handle adding a new document
+app.post('/upload-document', upload.single('document'), async (req, res) => {
+    try {
+        const { regNo, docId, docName } = req.body; // Extract regNo, docId, and docName from the request body
+        console.log('Received regNo:', regNo);
+        console.log('Received docId:', docId);
+        console.log('Received docName:', docName); // Log the received docName
+        console.log('Received file:', req.file); // Add this line to log the received file object
+
+        const docImg = req.file.buffer; // Access the uploaded file buffer
+
+        // Insert the uploaded file into the database, including the docName
+        const conn = await pool.getConnection();
+        await conn.query('INSERT INTO document (stud_reg_no, doc_id, doc_name, doc_img) VALUES (?, ?, ?, ?)', [regNo, docId, docName, docImg]);
+        conn.release();
+
+        res.json({ message: 'Document uploaded and inserted into the database successfully' });
+    } catch (error) {
+        console.error('Error uploading document:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });

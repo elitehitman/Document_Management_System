@@ -6,13 +6,10 @@ import { useNavigate } from 'react-router-dom';
 const Document = () => {
     const [documents, setDocuments] = useState([]);
     const [userData, setUserData] = useState(null);
-
     const navigate = useNavigate();
 
     useEffect(() => {
         const isUserLogin = localStorage.getItem('isUserLogin') === 'true';
-        const isStaffLogin = localStorage.getItem('isStaffLogin') === 'true';
-        const isAdminLogin = localStorage.getItem('isAdminLogin') === 'true';
 
         if (!isUserLogin) {
             navigate('/login');
@@ -69,10 +66,10 @@ const Document = () => {
                 {documents.map((document, index) => (
                     <div
                         key={index}
-                        className="w-1/6 h-50 rounded overflow-hidden shadow-lg m-4 document-card cursor-pointer flex justify-center items-center transition-transform transform hover:scale-105"
+                        className="w-1/6 h-50 rounded-lg overflow-hidden shadow-2xl m-4 document-card cursor-pointer flex justify-center items-center transform transition duration-300 hover:scale-105 hover:rotate-3 hover:shadow-3xl bg-blue-700 text-white"
                         onClick={() => handleViewDocument(document.doc_id)}
                     >
-                        <div className="font-bold text-xl">{document.doc_name}</div>
+                        <div className="font-bold text-2xl">{document.doc_name}</div>
                     </div>
                 ))}
             </div>

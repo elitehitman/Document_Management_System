@@ -6,7 +6,7 @@ const pool = mariadb.createPool({
     host: 'localhost',
     user: 'root',
     password: 'gaubauch',
-    database: 'document_management',
+    database: 'my_database',
     connectionLimit: 5,
 });
 

@@ -15,6 +15,7 @@ const AddStudent = () => {
     const [category, setCategory] = useState('');
     const [caste, setCaste] = useState('');
     const [birthDate, setBirthDate] = useState('');
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -64,7 +65,7 @@ const AddStudent = () => {
             console.error('Error adding student:', error);
         }
     };
-   
+
 
     return (
         <div className="max-w-md mx-auto mt-8">

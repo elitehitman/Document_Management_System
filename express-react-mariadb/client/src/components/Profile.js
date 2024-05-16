@@ -111,7 +111,8 @@ const Profile = () => {
                             </div>
                             <div className="w-1/2 pl-2">
                                 <div className="detail-box border border-gray-400 rounded-lg bg-gray-200 p-4 transition duration-300 ease-in-out transform hover:scale-105">
-                                    <p className="detail"><strong>Birth Date:</strong> {userData.birth_date}</p>
+                                    <p className="detail"><strong>Birth Date:</strong> {new Date(userData.birth_date).toLocaleDateString()}</p>
+
                                 </div>
                             </div>
                         </div>
