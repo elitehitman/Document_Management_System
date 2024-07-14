@@ -1,2 +1,2 @@
 ## DEMO VIDEO
-<video src="https://github.com/Rohan20-10/MyDocs-Document_Management_System/blob/main/Demo_video_pics/my_docs_demo.mp4" controls></video>
+[![Watch the video](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=H9S5ymFnBbc)
